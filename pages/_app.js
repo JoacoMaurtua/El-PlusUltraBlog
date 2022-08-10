@@ -1,8 +1,13 @@
-import "../styles/tailwind.css"; //Esta cabeza global siempre debe estar en el app.js
+import React from 'react';
 import '../styles/global.scss';
+import { Layout } from '../components';
 
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+  return (
+    <Layout>
+      <Component {...pageProps} />
+    </Layout>
+  );
 }
 
-export default MyApp
+export default MyApp;
