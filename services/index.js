@@ -1,6 +1,6 @@
 import { request, gql } from 'graphql-request';
 
-const graphqlAPI = 'https://api-sa-east-1.hygraph.com/v2/cl6ces2uv12ju01ui6ul41b8p/master';
+const graphqlAPI = process.env.NEXT_PUBLIC_GRAPHCMS_ENDPOINT;
 
 export const getPosts = async () => {
   const query = gql`
@@ -36,9 +36,5 @@ export const getPosts = async () => {
 
   const result = await request(graphqlAPI, query);
 
-  console.log('result: ',result);
-
   return result.postsConnection.edges;
 };
-
-
