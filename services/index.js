@@ -51,7 +51,7 @@ export const getRecentPosts = async () =>{
         last: 3
       ){
         title
-        featureImage{
+        featuredImage{
           url
         }
         createdAt
@@ -74,7 +74,7 @@ export const getSimilarPosts = async () =>{
         last: 3
       ){
         title
-        featureImage{
+        featuredImagee{
           url
         }
         createdAt
