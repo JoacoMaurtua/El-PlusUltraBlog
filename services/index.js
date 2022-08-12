@@ -88,3 +88,19 @@ export const getSimilarPosts = async () =>{
   return result.posts;
 }
 
+//Controlador para obtener las categorias
+
+export const getCategories = async () =>{
+  const query = gql`
+    query getCategories{
+      categories:{
+        name
+        slug
+      }
+    }
+  `
+  const result = await request(graphqlAPI, query);
+
+  return result.categories;
+}
+
