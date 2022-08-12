@@ -1,9 +1,10 @@
-import { request, gql } from 'graphql-request';
+import { request, gql } from 'graphql-request'; //gql es un objeto que permite hacer consultas
 
 const graphqlAPI = process.env.NEXT_PUBLIC_GRAPHCMS_ENDPOINT;
 
+//Controlador para traer todos los posts
 export const getPosts = async () => {
-  const query = gql`
+  const query = gql` 
     query MyQuery {
       postsConnection {
         edges {
@@ -38,3 +39,28 @@ export const getPosts = async () => {
 
   return result.postsConnection.edges;
 };
+
+
+//Controlador para traer los posts mas recientes
+
+export const getRecentPosts = async () =>{
+  const query = gql`
+    query GetPostDetails(){
+      posts(
+        orderBy: createdAt_ASC
+        last: 3
+      ){
+        title
+        featureImage{
+          url
+        }
+        createdAt
+        slug
+      }
+    }
+  `
+  const result = await request(graphqlAPI, query);
+
+  return result.posts;
+}
+
