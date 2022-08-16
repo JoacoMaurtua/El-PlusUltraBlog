@@ -40,6 +40,41 @@ export const getPosts = async () => {
   return result.postsConnection.edges;
 };
 
+//Controlador para traer un post en especifico
+export const getPostDetails = async (slug) => {
+  const query = gql`
+    query GetPostDetails($slug: String!) {
+      post(where: { slug: $slug }) {
+        title
+        excerpt
+        featuredImage {
+          url
+        }
+        author {
+          name
+          bio
+          photo {
+            url
+          }
+        }
+        createdAt
+        slug
+        content {
+          raw
+        }
+        categories {
+          name
+          slug
+        }
+      }
+    }
+  `;
+
+  const result = await request(graphqlAPI, query, { slug });
+
+  return result.post;
+};
+
 //Controlador para traer los posts mas recientes
 
 export const getRecentPosts = async () => {
@@ -65,7 +100,7 @@ export const getRecentPosts = async () => {
 
 //Controlador para traer posts similares al que se tiene en pantalla
 
-export const getSimilarPosts = async () => {
+export const getSimilarPosts = async (categories, slug) => {
   const query = gql`
     query GetPostDetails($slug: String!, $categories: [String!]){
       posts(
@@ -82,7 +117,7 @@ export const getSimilarPosts = async () => {
     }
   
   `;
-  const result = await request(graphqlAPI, query);
+  const result = await request(graphqlAPI, query, { categories, slug });
 
   return result.posts;
 };
@@ -101,40 +136,4 @@ export const getCategories = async () => {
   const result = await request(graphqlAPI, query);
 
   return result.categories;
-};
-
-//Controlador para traer un post en especifico
-export const getPostsDetails = async (slug) => {
-  const query = gql` 
-    query GetPostDetails($slug: String!) { /* Solo aceptara strings */
-      post(where: {slug: $slug}){
-        author {
-            bio
-            name
-            id
-            photo {
-              url
-            }
-          }
-        createdAt
-        slug
-        title
-        excerpt
-        featuredImage {
-            url
-        }
-        categories {
-          name
-          slug
-        }
-        content{
-          raw
-        }
-      }
-    }
-  `;
-
-  const result = await request(graphqlAPI, query, {slug});
-
-  return result.post;
 };
