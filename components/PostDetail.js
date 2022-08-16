@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 
 const PostDetail = ({ post }) => {
-  const getContentFragment = (index, text, obj, type) => {
+  const getContentFragment = (index, text, obj, type) => { //Funcion para que reconozca todos los elementos que uno escribe en el CMS de GraphQL
     let modifiedText = text;
 
     if (obj) {
