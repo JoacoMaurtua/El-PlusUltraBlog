@@ -141,11 +141,11 @@ export const getPostDetails = async (slug) => {
 };
 
 //Controlador para enviar comentarios
-export const submitComment = async (obj) =>{
+/* export const submitComment = async (obj) =>{
   const result = await fetch('/api/comments',{
     method: 'POST',
     body: JSON.stringify(obj)
   });
 
   return result.json();
-}
+} */
