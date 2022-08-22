@@ -168,3 +168,5 @@ export const getComments = async (slug) =>{
 
   return result.comments;
 }
+
+//controlador para traer algunas caracteristicas del post para el carousel
