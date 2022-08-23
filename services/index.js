@@ -40,8 +40,9 @@ export const getPosts = async () => {
   return result.postsConnection.edges;
 };
 
-//Controlador para traer los posts mas recientes
 
+
+//Controlador para traer los posts mas recientes
 export const getRecentPosts = async () => {
   const query = gql`
     query GetPostDetails(){
@@ -62,6 +63,8 @@ export const getRecentPosts = async () => {
 
   return result.posts;
 };
+
+
 
 //Controlador para traer posts similares al que se tiene en pantalla
 export const getSimilarPosts = async (categories, slug) => {
@@ -87,7 +90,6 @@ export const getSimilarPosts = async (categories, slug) => {
 
 
 
-
 //Controlador para obtener las categorias
 export const getCategories = async () => {
   const query = gql`
@@ -103,6 +105,8 @@ export const getCategories = async () => {
 
   return result.categories;
 };
+
+
 
 //Controlador para traer un post en especifico
 export const getPostDetails = async (slug) => {
@@ -139,6 +143,8 @@ export const getPostDetails = async (slug) => {
   return result.post;
 };
 
+
+
 //Controlador para enviar comentarios
 export const submitComment = async (obj) =>{
   const result = await fetch('/api/comments',{
@@ -151,6 +157,8 @@ export const submitComment = async (obj) =>{
 
   return result.json();
 } 
+
+
 
 //Controlador para traer la lista de comentarios
 export const getComments = async (slug) =>{
@@ -167,6 +175,8 @@ export const getComments = async (slug) =>{
 
   return result.comments;
 }
+
+
 
 //controlador para traer algunas caracteristicas del post para el carousel
 export const getFeaturedPosts = async () => {
@@ -193,6 +203,8 @@ export const getFeaturedPosts = async () => {
 
   return result.posts;
 };
+
+
 
 //Controler para traer los posts de una determinada categoria
 export const getCategoryPost = async (slug) => {
