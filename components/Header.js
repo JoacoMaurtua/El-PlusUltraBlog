@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import {SiStarship} from "react-icons/si";
 
 import Link from 'next/link';
 
@@ -18,8 +19,8 @@ const Header = () => {
       <div className="border-b w-full inline-block border-white-400 py-8">
         <div className="md:float-left block">
           <Link href="/">
-            <span className="cursor-pointer font-bold text-4xl text-white">
-              FalconDevsBlog
+            <span className="cursor-pointer font-bold text-4xl text-white flex">
+              El PlusUltra <SiStarship style={{fontSize:'3rem', marginLeft:'.5rem'}}/>
             </span>
           </Link>
         </div>

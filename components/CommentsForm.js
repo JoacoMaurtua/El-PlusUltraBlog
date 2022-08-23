@@ -57,12 +57,12 @@ const CommentsForm = ({ slug }) => {
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-8 pb-12 mb-8">
-      <h3 className="text-xl mb-8 font-semibold border-b pb-4">Comments Form</h3>
+      <h3 className="text-xl mb-8 font-semibold border-b pb-4">¡Déjanos un comentario!</h3>
       <div className="grid grid-cols-1 gap-4 mb-4">
         <textarea 
           ref={commentEl} 
           className="p-4 outline-none w-full rounded-lg focus:ring-2 focus:ring-gray-200 bg-gray-100 text-gray-700"
-          placeholder="Comment"
+          placeholder="Comentario"
           name="comment"
         />
       </div>
@@ -71,7 +71,7 @@ const CommentsForm = ({ slug }) => {
           type="text"
           ref={nameEl}
           className="p-2 px-4 outline-none w-full rounded-lg focus:ring-2 focus:ring-gray-200 bg-gray-100 text-gray-700"
-          placeholder="Name"
+          placeholder="Nombre"
           name="name"
         />
         <input
@@ -85,19 +85,19 @@ const CommentsForm = ({ slug }) => {
       <div className="grid grid-cols-1 gap-4 mb-4">
         <div>
           <input ref={storeDataEl} type="checkbox" id="storeData" name="storeData" value="true"/>
-          <label className="text-gray-500 cursor-pointer ml-2" htmlFor="storeData">Save my e-mail and name for the next time i commited</label>
+          <label className="text-gray-500 cursor-pointer ml-2" htmlFor="storeData">Guarda mi correo electrónico y mi nombre para la próxima vez que comente</label>
         </div>
       </div>
-      {error && <p className="text-xs text-red-500">All fields are required!</p>}
+      {error && <p className="text-xs text-red-500">Todos los campos son requeridos!</p>}
       <div className="mt-8">
         <button 
           type="button" 
           onClick={handleCommentSubmit}
           className="transition duration-500 ease hover:bg-indigo-900 inline-block bg-pink-600 text-lg rounded-full text-white px-8 py-3 cursor-pointer"
           >
-          Post Comment
+          Enviar Comentario
         </button>
-        {showSuccessMessage && <span className="text-xl float-right font-semibold mt-3 text-green-500">Comment Submitted!</span>}
+        {showSuccessMessage && <span className="text-xl float-right font-semibold mt-3 text-green-500">Comentario Enviado!</span>}
       </div>
     </div>
   );
