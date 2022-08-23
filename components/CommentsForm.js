@@ -1,103 +1,99 @@
-import React, { useRef, useState, useEffect } from 'react';
-
-import { submitComment } from '../services/index';
+import React, { useState, useEffect } from 'react';
+import { submitComment } from '../services';
 
 const CommentsForm = ({ slug }) => {
   const [error, setError] = useState(false);
   const [localStorage, setLocalStorage] = useState(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [formData, setFormData] = useState({ name: null, email: null, comment: null, storeData: false });
 
-  //Uso de useRef: No necesitamos mantener estos valores en el estado porque simplemente
-  // queremos leer el valor del campo de entrada y luego enviarlo a Graphql CMS
-  const commentEl = useRef();
-  const nameEl = useRef();
-  const emailEl = useRef();
-  const storeDataEl = useRef();
+  useEffect(() => {
+    setLocalStorage(window.localStorage);
+    const initalFormData = {
+      name: window.localStorage.getItem('name'),
+      email: window.localStorage.getItem('email'),
+      storeData: window.localStorage.getItem('name') || window.localStorage.getItem('email'),
+    };
+    setFormData(initalFormData);
+  }, []);
 
-  //limpiar el local storage:
-  useEffect(()=>{
-    nameEl.current.value = window.localStorage.getItem('name');
-    emailEl.current.value = window.localStorage.getItem('email');
-  },[])
+  const onInputChange = (e) => {
+    const { target } = e;
+    if (target.type === 'checkbox') {
+      setFormData((prevState) => ({
+        ...prevState,
+        [target.name]: target.checked,
+      }));
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        [target.name]: target.value,
+      }));
+    }
+  };
 
-  const handleCommentSubmit =()=>{
+  const handlePostSubmission = () => {
     setError(false);
-
-    const { value:comment } = commentEl.current;
-    const { value:name } = nameEl.current;
-    const { value:email } = emailEl.current;
-    const { checked:storeData } = storeDataEl.current;
-
-    if(!comment || !name || !email){
+    const { name, email, comment, storeData } = formData;
+    if (!name || !email || !comment) {
       setError(true);
       return;
     }
+    const commentObj = {
+      name,
+      email,
+      comment,
+      slug,
+    };
 
-    const commentObject = { name,email,comment,slug};
-
-    //Almacenar o no los datos en local storage:
-    if(storeData){
-      window.localStorage.setItem('name', name);
-      window.localStorage.setItem('email',email);
-    }else{
-      window.localStorage.removeItem('name',name);
-      window.localStorage.removeItem('email',email)
+    if (storeData) {
+      localStorage.setItem('name', name);
+      localStorage.setItem('email', email);
+    } else {
+      localStorage.removeItem('name');
+      localStorage.removeItem('email');
     }
 
-    submitComment(commentObject)
-        .then((res)=>{
+    submitComment(commentObj)
+      .then((res) => {
+        if (res.createComment) {
+          if (!storeData) {
+            formData.name = '';
+            formData.email = '';
+          }
+          formData.comment = '';
+          setFormData((prevState) => ({
+            ...prevState,
+            ...formData,
+          }));
           setShowSuccessMessage(true);
-
-          setTimeout(()=>{
+          setTimeout(() => {
             setShowSuccessMessage(false);
-          })
-        },3000)
-        
-  }
+          }, 3000);
+        }
+      });
+  };
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-8 pb-12 mb-8">
-      <h3 className="text-xl mb-8 font-semibold border-b pb-4">¡Déjanos un comentario!</h3>
+      <h3 className="text-xl mb-8 font-semibold border-b pb-4">Déjanos un Comentario</h3>
       <div className="grid grid-cols-1 gap-4 mb-4">
-        <textarea 
-          ref={commentEl} 
-          className="p-4 outline-none w-full rounded-lg focus:ring-2 focus:ring-gray-200 bg-gray-100 text-gray-700"
-          placeholder="Comentario"
-          name="comment"
-        />
+        <textarea value={formData.comment} onChange={onInputChange} className="p-4 outline-none w-full rounded-lg h-40 focus:ring-2 focus:ring-gray-200 bg-gray-100 text-gray-700" name="comment" placeholder="Comentario" />
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-        <input
-          type="text"
-          ref={nameEl}
-          className="p-2 px-4 outline-none w-full rounded-lg focus:ring-2 focus:ring-gray-200 bg-gray-100 text-gray-700"
-          placeholder="Nombre"
-          name="name"
-        />
-        <input
-          type="text"
-          ref={emailEl}
-          className="p-2 px-4 outline-none w-full rounded-lg focus:ring-2 focus:ring-gray-200 bg-gray-100 text-gray-700"
-          placeholder="Email"
-          name="email"
-        />
+        <input type="text" value={formData.name} onChange={onInputChange} className="py-2 px-4 outline-none w-full rounded-lg focus:ring-2 focus:ring-gray-200 bg-gray-100 text-gray-700" placeholder="Nombre" name="name" />
+        <input type="email" value={formData.email} onChange={onInputChange} className="py-2 px-4 outline-none w-full rounded-lg focus:ring-2 focus:ring-gray-200 bg-gray-100 text-gray-700" placeholder="Email" name="email" />
       </div>
       <div className="grid grid-cols-1 gap-4 mb-4">
         <div>
-          <input ref={storeDataEl} type="checkbox" id="storeData" name="storeData" value="true"/>
-          <label className="text-gray-500 cursor-pointer ml-2" htmlFor="storeData">Guarda mi correo electrónico y mi nombre para la próxima vez que comente</label>
+          <input checked={formData.storeData} onChange={onInputChange} type="checkbox" id="storeData" name="storeData" value="true" />
+          <label className="text-gray-500 cursor-pointer" htmlFor="storeData"> Guarda mis datos para la próxima vez que haga un comentario.</label>
         </div>
       </div>
-      {error && <p className="text-xs text-red-500">Todos los campos son requeridos!</p>}
+      {error && <p className="text-xs text-red-500">Todos los campos son necesarios</p>}
       <div className="mt-8">
-        <button 
-          type="button" 
-          onClick={handleCommentSubmit}
-          className="transition duration-500 ease hover:bg-indigo-900 inline-block bg-pink-600 text-lg rounded-full text-white px-8 py-3 cursor-pointer"
-          >
-          Enviar Comentario
-        </button>
-        {showSuccessMessage && <span className="text-xl float-right font-semibold mt-3 text-green-500">Comentario Enviado!</span>}
+        <button type="button" onClick={handlePostSubmission} className="transition duration-500 ease hover:bg-indigo-900 inline-block bg-pink-600 text-lg font-medium rounded-full text-white px-8 py-3 cursor-pointer">Enviar Comentario</button>
+        {showSuccessMessage && <span className="text-base float-right font-semibold mt-3 text-green-500">Comentario enviado para revisión</span>}
       </div>
     </div>
   );
