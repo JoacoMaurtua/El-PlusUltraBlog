@@ -64,7 +64,6 @@ export const getRecentPosts = async () => {
 };
 
 //Controlador para traer posts similares al que se tiene en pantalla
-
 export const getSimilarPosts = async (categories, slug) => {
   const query = gql`
     query GetPostDetails($slug: String!, $categories: [String!]) {
@@ -193,4 +192,42 @@ export const getFeaturedPosts = async () => {
   const result = await request(graphqlAPI, query);
 
   return result.posts;
+};
+
+//Controler para traer los posts de una determinada categoria
+export const getCategoryPost = async (slug) => {
+  const query = gql`
+    query GetCategoryPost($slug: String!) {
+      postsConnection(where: {categories_some: {slug: $slug}}) {
+        edges {
+          cursor
+          node {
+            author {
+              bio
+              name
+              id
+              photo {
+                url
+              }
+            }
+            createdAt
+            slug
+            title
+            excerpt
+            featuredImage {
+              url
+            }
+            categories {
+              name
+              slug
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const result = await request(graphqlAPI, query, { slug });
+
+  return result.postsConnection.edges;
 };
