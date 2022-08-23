@@ -170,25 +170,26 @@ export const getComments = async (slug) =>{
 }
 
 //controlador para traer algunas caracteristicas del post para el carousel
-export const getFeaturedPosts = async () =>{
+export const getFeaturedPosts = async () => {
   const query = gql`
-    query GetCategoryPost(){
-      post(where: {featuredPost: true}){
-        author{
+    query GetCategoryPost() {
+      posts(where: {featuredPost: true}) {
+        author {
           name
-          photo{
+          photo {
             url
           }
         }
-        featuredImage{
+        featuredImage {
           url
         }
         title
         slug
         createdAt
       }
-    }
-  `
+    }   
+  `;
+
   const result = await request(graphqlAPI, query);
 
   return result.posts;
